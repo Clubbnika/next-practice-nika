@@ -13,22 +13,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EmojiRain } from '@/components/EmojiRain';
 
-interface HomePageProps extends React.ComponentPropsWithoutRef<"div"> {
+interface HomePageProps {
   searchParams?: Record<string, string | string[] | undefined>;
   params?: Record<string, string | string[]>;
+  className?: string;
 }
 
 export default function Home({
   className,
   searchParams,
   params,
-  ...restProps
 }: HomePageProps) {
+  // 
   console.log("searchParams:", searchParams);
   console.log("params:", params);
 
   return (
-    <div className={cn("flex flex-col gap-6 max-w-100 mx-auto mt-20", className)} {...restProps}>
+    <div className={cn("flex flex-col gap-6 max-w-100 mx-auto mt-20", className)}>
       <h1 className='text-white mx-auto text-3xl font-bold'>Log in</h1>
       <EmojiRain />
       <Card>

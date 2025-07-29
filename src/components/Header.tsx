@@ -7,7 +7,7 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="ml-7 m-5 font-bold bg-black">
+    <header className="ml-7 m-3 font-bold bg-black">
       <nav>
         <Link
           className={
@@ -36,7 +36,7 @@ export function Header() {
           Profile{' '}
         </Link>
       </nav>
-      <div className="width-full h-[1px] mt-5 bg-white/10"></div>
+      <div className="width-full h-[1px] mt-3 bg-white/10"></div>
     </header>
   );
 }

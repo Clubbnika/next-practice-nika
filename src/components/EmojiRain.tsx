@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 export const EmojiRain = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  // Зберігаємо xpos в useRef, щоб воно не викликало ререндер компонента
+  // і не перезапускало useEffect при кожній зміні.
   const xposRef = useRef(0.5);
 
   useEffect(() => {
@@ -16,11 +18,11 @@ export const EmojiRain = () => {
 
     const NUM_CONFETTI = 15;
     const COLORS = [
-     [144, 238, 144],
-      [60, 179, 113],
-      [34, 139, 34],
-      [0, 128, 0],
-      [50, 205, 50],
+     [144, 238, 144], // Світло-зелений (LightGreen)
+      [60, 179, 113],  // Морська зелень (MediumAquamarine)
+      [34, 139, 34],   // Лісова зелень (ForestGreen)
+      [0, 128, 0],     // Чисто зелений (Green)
+      [50, 205, 50],   // Лаймовий зелений (LimeGreen)
     ];
     const PI_2 = 2 * Math.PI;
 
@@ -41,6 +43,7 @@ export const EmojiRain = () => {
     const getRandomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min) + min);
 
     const handleMouseMove = (e: MouseEvent) => {
+      // Оновлюємо значення xpos в референсі
       xposRef.current = e.pageX / w;
     };
 
@@ -75,8 +78,9 @@ export const EmojiRain = () => {
         this.y = range(-20, h - this.r2);
         this.xmax = w - this.r;
         this.ymax = h - this.r;
-        this.vx = range(-0.4, 1) + 3 * xposRef.current - 1.5;
-        this.vy = 0.2 * this.r + range(-0.3, 0.3);
+        // Тепер читаємо актуальне значення xpos з xposRef.current
+        this.vx = range(-0.5, 1.5) + 3 * xposRef.current - 1.5;
+        this.vy = 0.3 * this.r + range(-0.5, 0.5);
       }
 
       draw() {
@@ -112,7 +116,8 @@ export const EmojiRain = () => {
       window.removeEventListener("resize", resizeWindow);
       document.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, []); // <--- Важливо: тепер масив залежностей порожній!
+            // useEffect запускається лише один раз при монтуванні компонента.
 
   return (
     <canvas

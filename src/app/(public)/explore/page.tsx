@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Explore } from './Explore';
+import { Explore } from './Explore'
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {

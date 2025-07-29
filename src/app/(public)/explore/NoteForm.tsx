@@ -83,7 +83,7 @@ export function NoteForm({ onPostSuccess }: NoteFormProps) {
       <div className="flex justify-end mt-3">
         <button
           type="submit"
-          className="text-black font-bold bg-white/80 rounded-xl p-2 px-4 hover:bg-white transition-colors duration-200"
+          className="text-black font-bold bg-white rounded-xl p-2 px-4 hover:bg-white/80 transition-colors duration-200"
           disabled={isSubmitting}
         >
           {isSubmitting ? 'Sending...' : 'Send'}

@@ -1,86 +1,60 @@
 'use client';
 
-// import { useSearchParams } from 'next/navigation';
+import { useEffect, useState, useCallback } from 'react';
+import { Note } from './Note';
+import { NoteForm } from './NoteForm';
 
-// export function Explore() {
-//   const searchParams = useSearchParams();
-//   const tag = searchParams.get('tag');
+import type { PostType } from '@/app/shared/types/post.type';
 
-//   return (
-//     <h1 className="m-7 font-bold text-white">
-//       Explore {!!tag && `by #${tag}`}
-//     </h1>
-//   );
-// }
+export function Explore() {
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
-import cn from 'classnames';
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+  const fetchPosts = useCallback(async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/posts');
+      if (!res.ok) {
+        throw new Error(`Failed to fetch posts: ${res.statusText}`);
+      }
+      const data: PostType[] = await res.json();
+      setPosts(data);
+    } catch (err: unknown) {
+      console.error('Fetch error:', err);
+      setError('Failed loading posts.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-export function Explore({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
   return (
-    <div className={cn("flex flex-col gap-6 max-w-100 mx-auto mt-20", className)} {...props}>
-      <h1 className='text-white mx-auto text-3xl font-bold'>Log in</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input id="password" type="password" required />
-              </div>
-              <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full">
-                  Login
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Login with Google
-                </Button>
-              </div>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
-                Sign up
-              </a>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  )
+    <>
+      <NoteForm onPostSuccess={fetchPosts} />
+      <div
+        className="space-y-3 mx-auto max-w-100 pt-3 rounded-xl "
+        style={{
+          backgroundImage: 'url(background.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: '100vh',
+          width: '100%',
+        }}
+      >
+        {isLoading && <p className="text-white text-center">Loading posts...</p>}
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        {!isLoading && posts.length === 0 && !error && (
+          <p className="text-white text-center">There are no posts yet, be the first!</p>
+        )}
+        {posts.map((note) => (
+          <Note key={note.id} note={note} />
+        ))}
+      </div>
+    </>
+  );
 }

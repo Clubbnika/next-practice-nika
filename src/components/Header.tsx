@@ -7,7 +7,7 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="ml-7 m-3 font-bold">
+    <header className="ml-7 m-3 font-bold bg-black">
       <nav>
         <Link
           className={
@@ -20,11 +20,11 @@ export function Header() {
 
         <Link
           className={
-            pathname === PAGES.EXPLORE ? 'text-[#78a068]' : 'text-white/80'
+            pathname === PAGES.POSTS ? 'text-[#78a068]' : 'text-white/80'
           }
-          href={PAGES.EXPLORE}
+          href={PAGES.POSTS}
         >
-          Explore |{' '}
+          Posts |{' '}
         </Link>
 
         <Link

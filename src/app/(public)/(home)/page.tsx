@@ -15,7 +15,7 @@ import { EmojiRain } from '@/components/EmojiRain';
 
 export default function Home() {
   return (
-    <div className={cn("flex flex-col gap-6 max-w-100 mx-auto mt-20")}>
+    <div className={cn("flex flex-col gap-6 max-w-100 mx-auto mt-10")}>
       <h1 className='text-white mx-auto text-3xl font-bold'>Log in</h1>
       <EmojiRain />
       <Card>

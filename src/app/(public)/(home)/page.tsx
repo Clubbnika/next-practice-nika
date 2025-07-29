@@ -20,11 +20,10 @@ interface HomePageProps extends React.ComponentPropsWithoutRef<"div"> {
 
 export default function Home({
   className,
-  searchParams, // Вилучаємо searchParams з props
-  params,       // Вилучаємо params з props
-  ...restProps  // Решта props, які безпечно передати DOM-елементу
+  searchParams,
+  params,
+  ...restProps
 }: HomePageProps) {
-  // Тепер searchParams та params доступні тут, але не будуть передані до div
   console.log("searchParams:", searchParams);
   console.log("params:", params);
 

@@ -13,11 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EmojiRain } from '@/components/EmojiRain';
 
-// interface HomePageProps {
-//   searchParams?: Record<string, string | string[] | undefined>;
-//   params?: Record<string, string | string[]>;
-// }
-
 export default function Home() {
   return (
     <div className={cn("flex flex-col gap-6 max-w-100 mx-auto mt-20")}>

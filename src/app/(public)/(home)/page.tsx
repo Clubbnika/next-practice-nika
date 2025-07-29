@@ -13,23 +13,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EmojiRain } from '@/components/EmojiRain';
 
-interface HomePageProps {
-  searchParams?: Record<string, string | string[] | undefined>;
-  params?: Record<string, string | string[]>;
-  className?: string;
-}
+// interface HomePageProps {
+//   searchParams?: Record<string, string | string[] | undefined>;
+//   params?: Record<string, string | string[]>;
+// }
 
-export default function Home({
-  className,
-  searchParams,
-  params,
-}: HomePageProps) {
-  // 
-  console.log("searchParams:", searchParams);
-  console.log("params:", params);
-
+export default function Home() {
   return (
-    <div className={cn("flex flex-col gap-6 max-w-100 mx-auto mt-20", className)}>
+    <div className={cn("flex flex-col gap-6 max-w-100 mx-auto mt-20")}>
       <h1 className='text-white mx-auto text-3xl font-bold'>Log in</h1>
       <EmojiRain />
       <Card>

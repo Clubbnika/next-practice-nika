@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { postNote } from '@/app/server-actions/post-note';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 
 interface NoteFormProps {
   onPostSuccess?: () => void;
@@ -13,7 +13,7 @@ export function NoteForm({ onPostSuccess }: NoteFormProps) {
   const [author, setAuthor] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

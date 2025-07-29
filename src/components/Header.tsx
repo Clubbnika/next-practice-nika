@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { PAGES } from '../config/pages.config';
+import { PAGES } from '@/app/config/pages.config';
 import { usePathname } from 'next/navigation';
 
 export function Header() {

@@ -48,7 +48,7 @@ export function NoteForm({ onPostSuccess }: NoteFormProps) {
       }
     } catch (error) {
       console.error('Error creating post:', error);
-      setMessage({ type: 'error', text: 'Помилка при створенні посту.' });
+      setMessage({ type: 'error', text: 'Something went wrong while creating the post.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -58,7 +58,7 @@ export function NoteForm({ onPostSuccess }: NoteFormProps) {
     <form onSubmit={handleSubmit} className="p-3 mx-auto mb-3 max-w-100 border border-white/10 rounded-xl hover:shadow shadow-white/30">
       <input
         name="author"
-        placeholder="Введіть ваше ім'я користувача..."
+        placeholder="Please wright your username..."
         className="text-white outline-none border border-white/10 p-3 rounded-xl w-full mb-3 placeholder-gray-400"
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
@@ -67,7 +67,7 @@ export function NoteForm({ onPostSuccess }: NoteFormProps) {
 
       <textarea
         name="content"
-        placeholder="Напишіть ваш пост..."
+        placeholder="Wright the post..."
         className="text-white outline-none border border-white/10 p-3 rounded-xl w-full mb-3 placeholder-gray-400 h-24 resize-y"
         value={content}
         onChange={(e) => setContent(e.target.value)}

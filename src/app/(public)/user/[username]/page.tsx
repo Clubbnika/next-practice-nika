@@ -1,12 +1,10 @@
-import type { Metadata } from "next";
-import { Profile } from "./Profile";
+import type { Metadata } from 'next';
+import { Profile } from './Profile';
 
 export const metadata: Metadata = {
-  title: 'User'
-}
+  title: 'User',
+};
 
 export default function ProfilePage() {
-  return (
-<Profile />
-  );
+  return <Profile />;
 }

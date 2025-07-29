@@ -2,5 +2,5 @@ export const PAGES = {
   HOME: '/',
   EXPLORE: '/explore',
   PROFILE_FAKE: '/profile-fake',
-  PROFILE: (username:string) => `/user/${username}`,
-}
+  PROFILE: (username: string) => `/user/${username}`,
+};

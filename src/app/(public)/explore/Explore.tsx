@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Note } from './Note';
-import { NoteForm } from './NoteForm';
+// import { NoteForm } from './NoteForm';
 
 import type { PostType } from '@/app/shared/types/post.type';
 
@@ -35,7 +35,6 @@ export function Explore() {
 
   return (
     <>
-      <NoteForm onPostSuccess={fetchPosts} />
       <div
         className="space-y-3 mx-auto max-w-100 pt-3 rounded-xl "
         style={{

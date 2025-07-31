@@ -6,5 +6,6 @@ export interface PostType {
   content?: string;
   isPublished: boolean;
   author: Author;
-  authorId: number;
+  authorId: string;
+  createdAt: Date;
 }

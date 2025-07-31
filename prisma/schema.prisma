@@ -13,19 +13,21 @@ provider = "postgresql"
 url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id          Int      @id @default(autoincrement())
-  username    String   @unique
-  text        String?
-  posts       Post[]
+  id                  String        @id @default(cuid())
+  email               String        @unique                             
+  username            String        @unique
+  text                String?
+  password            String?                                           
+  posts               Post[]                                           
 }
 
 model Post {
-  id          Int      @id @default(autoincrement())
-  title       String
-  content     String?
-  isPublished Boolean  @default(false)
-  author      User     @relation(fields: [authorId], references: [id])
-  authorId    Int
+  id                  Int           @id @default(autoincrement())
+  title               String
+  content             String?
+  isPublished         Boolean       @default(false)
+  author              User          @relation(fields: [authorId], references: [id])
+  authorId            String
+  createdAt           DateTime      @default(now())
 }

@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { getApp, getApps, initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -16,6 +16,22 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
+
+const isFirebaseConfigComplete = Object.values(firebaseConfig).every(value => typeof value === 'string' && value.length > 0);
+
+let appInstance;
+let authInstance;
+
+if (isFirebaseConfigComplete) {
+  // Ініціалізуємо Firebase App, якщо конфігурація повна
+  appInstance = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+  authInstance = getAuth(appInstance);
+} else {
+  console.error("Firebase configuration is incomplete. Authentication will not work.");
+  // Можна повернути null або викинути помилку, залежно від бажаної поведінки
+  // Для серверних маршрутів краще викинути помилку, щоб вона була помітна
+  throw new Error("Firebase configuration is incomplete. Check your .env.local file.");
+}
 
 console.log("--- Firebase Config loaded from process.env ---");
 console.log("API Key:", firebaseConfig.apiKey ? "Loaded" : "MISSING!");

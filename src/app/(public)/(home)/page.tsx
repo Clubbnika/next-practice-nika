@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EmojiRain } from '@/components/EmojiRain';
 
+import { Eye, EyeOff } from 'lucide-react';
+
 export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,6 +26,7 @@ export default function Home() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUsername, setLoggedInUsername] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -133,9 +136,9 @@ export default function Home() {
 
       {isLoggedIn ? (
         <Card className="text-center p-8">
-          <CardTitle className="text-2xl mb-4 text-white">Wellcome to the app.</CardTitle>
+          <CardTitle className="text-2xl mb-4 text-white">Welcome to the app.</CardTitle>
           {loggedInUsername && (
-            <CardDescription className="text-lg mb-6">
+            <CardDescription className="text-lg mb-6 text-white/80">
               Nice to see you, {loggedInUsername}!
             </CardDescription>
           )}
@@ -166,6 +169,7 @@ export default function Home() {
                       required
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
+                      autoComplete="username"
                     />
                   </div>
                 )}
@@ -178,9 +182,10 @@ export default function Home() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="email"
                   />
                 </div>
-                <div className="grid gap-3">
+                <div className="grid gap-3 relative">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
                     <a
@@ -193,11 +198,20 @@ export default function Home() {
                   </div>
                   <Input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    autoComplete={isRegistering ? "new-password" : "current-password"}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 mt-8"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5 text-[#2cb52c]" /> : <Eye className="h-5 w-5 text-[#2cb52c]" />} {/* Змінено колір на text-blue-500 */}
+                  </button>
                 </div>
                 <div className="flex flex-col gap-3">
                   <Button type="submit" className="w-full">
@@ -222,7 +236,7 @@ export default function Home() {
                   </>
                 ) : (
                   <>
-                    Don`t have an account?{" "}
+                    Don&apos;t have an account?{" "}
                     <a
                       href="#"
                       className="underline underline-offset-4"

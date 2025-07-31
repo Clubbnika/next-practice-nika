@@ -1,59 +1,35 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
 import { Note } from './Note';
-// import { NoteForm } from './NoteForm';
+import cn from 'classnames';
 
 import type { PostType } from '@/app/shared/types/post.type';
 
-export function Explore() {
-  const [posts, setPosts] = useState<PostType[]>([]);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+interface ExploreContentProps {
+  posts: PostType[];
+  isLoading: boolean;
+  error: string | null;
+}
 
-  const fetchPosts = useCallback(async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      const res = await fetch('/api/posts');
-      if (!res.ok) {
-        throw new Error(`Failed to fetch posts: ${res.statusText}`);
-      }
-      const data: PostType[] = await res.json();
-      setPosts(data);
-    } catch (err: unknown) {
-      console.error('Fetch error:', err);
-      setError('Failed loading posts.');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
-
+export function ExploreContent({ posts, isLoading, error }: ExploreContentProps) {
   return (
-    <>
-      <div
-        className="space-y-3 mx-auto max-w-100 pt-3 rounded-xl "
-        style={{
-          backgroundImage: 'url(background.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: '100vh',
-          width: '100%',
-        }}
-      >
-        {isLoading && <p className="text-white text-center">Loading posts...</p>}
-        {error && <p className="text-red-500 text-center">{error}</p>}
-        {!isLoading && posts.length === 0 && !error && (
-          <p className="text-white text-center">There are no posts yet, be the first!</p>
-        )}
-        {posts.map((note) => (
-          <Note key={note.id} note={note} />
-        ))}
-      </div>
-    </>
+    <div
+      className={cn("space-y-3 pt-3 rounded-t-xl w-full pb-3 min-h-110")}
+      style={{
+        backgroundImage: 'url(background.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: 'full',
+      }}
+    >
+      {isLoading && <p className="text-white text-center">Loading posts...</p>}
+      {error && <p className="text-red-500 text-center">Error: {error}</p>}
+      {!isLoading && posts.length === 0 && !error && (
+        <p className="text-white text-center">No posts yet. Be the first to write one!</p>
+      )}
+      {posts.map((note) => (
+        <Note key={note.id} note={note} />
+      ))}
+    </div>
   );
 }

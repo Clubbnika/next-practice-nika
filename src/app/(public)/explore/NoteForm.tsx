@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { postNote } from '@/app/server-actions/post-note';
+import { UserAvatar } from '@/app/shared/types/user-avatar';
 
 interface NoteFormProps {
   onPostSuccess?: () => void;
@@ -48,22 +49,26 @@ export function NoteForm({ onPostSuccess, initialAuthor, isAuthorFieldDisabled =
       }
     } catch (error) {
       console.error('Error creating post:', error);
-      setMessage({ type: 'error', text: (error as Error).message || 'Something went wrong while creating the post.' }); // Краще виводити message з помилки
+      setMessage({ type: 'error', text: (error as Error).message || 'Something went wrong while creating the post.' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-3 mx-auto mb-3 max-w-lg border border-white/10 rounded-xl hover:shadow shadow-white/30">
-      <input
-        name="author"
-        placeholder="Please write your username..."
-        className="text-white outline-none border border-white/10 p-3 rounded-xl w-full mb-3 placeholder-gray-400"
-        value={author}
-        onChange={(e) => setAuthor(e.target.value)}
-        disabled={isSubmitting || isAuthorFieldDisabled}
-      />
+    <form onSubmit={handleSubmit} className="p-3 mx-auto max-w-lg min-w-100 border border-white/10 rounded-xl hover:shadow shadow-white/30">
+      <div className="flex items-center gap-3 mb-5 ml-1.5 mt-3">
+        <UserAvatar alt='Avatar icon' src='/avatar.png' width={30} height={30} />
+        <input
+          name="author"
+          placeholder="Please write your username..."
+          className="outline-none rounded-xl placeholder-gray-400 text-[#78a068] font-bold"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          disabled={isSubmitting || isAuthorFieldDisabled}
+          autoComplete="username"
+        />
+      </div>
 
       <textarea
         name="content"

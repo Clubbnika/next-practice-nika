@@ -133,7 +133,7 @@ export default function Home() {
 
       {isLoggedIn ? (
         <Card className="text-center p-8">
-          <CardTitle className="text-2xl mb-4 text-white">Wellcome to the app!</CardTitle>
+          <CardTitle className="text-2xl mb-4 text-white">Wellcome to the app.</CardTitle>
           {loggedInUsername && (
             <CardDescription className="text-lg mb-6">
               Nice to see you, {loggedInUsername}!

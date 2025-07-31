@@ -17,6 +17,13 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
+console.log("--- Firebase Config loaded from process.env ---");
+console.log("API Key:", firebaseConfig.apiKey ? "Loaded" : "MISSING!");
+console.log("Auth Domain:", firebaseConfig.authDomain ? "Loaded" : "MISSING!");
+console.log("Project ID:", firebaseConfig.projectId ? "Loaded" : "MISSING!");
+console.log("Full config object:", firebaseConfig);
+console.log("---------------------------------------------");
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);

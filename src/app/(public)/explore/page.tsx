@@ -18,61 +18,90 @@ export default function ExplorePage() {
 
   const router = useRouter();
 
-  const fetchPosts = useCallback(async () => {
-    setLoadingPosts(true);
-    setPostsError(null);
-    try {
-      const response = await fetch('/api/posts');
-      if (!response.ok) {
-        throw new Error('Failed to fetch posts');
-      }
-      const data: PostType[] = await response.json();
-      setPosts(data);
-    } catch (err: unknown) {
-      console.error('Error fetching posts:', err);
-      setPostsError((err instanceof Error) ? err.message : 'Failed to load posts.');
-    } finally {
-      setLoadingPosts(false);
-    }
-  }, []);
-
-  useEffect(() => {
+  const checkAuthStatus = useCallback(() => {
     const token = localStorage.getItem('jwt_token');
     const storedUsername = localStorage.getItem('user_username');
 
     if (token && storedUsername) {
       setIsLoggedIn(true);
       setCurrentUserUsername(storedUsername);
+      return token;
     } else {
       setIsLoggedIn(false);
       setCurrentUserUsername(null);
+      return null;
     }
+  }, []);
 
-    fetchPosts();
-  }, [fetchPosts]);
+  const fetchPosts = useCallback(async (token: string | null) => {
+    setLoadingPosts(true);
+    setPostsError(null);
+    try {
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch('/api/posts', {
+        method: 'GET',
+        headers: headers,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+
+      const data: PostType[] = await response.json();
+      setPosts(data);
+    } catch (err: unknown) {
+      console.error('Error fetching posts:', err);
+      const errorMessage = (err instanceof Error) ? err.message : 'Failed to load posts.';
+      setPostsError(errorMessage);
+      if (token && errorMessage.includes('Unauthorized')) {
+        setIsLoggedIn(false);
+        setCurrentUserUsername(null);
+        localStorage.removeItem('jwt_token');
+        localStorage.removeItem('user_username');
+        setPostsError('Session expired. Please log in again.');
+      } else if (!token) {
+        setPostsError(null);
+      }
+    } finally {
+      setLoadingPosts(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const token = checkAuthStatus();
+    fetchPosts(token);
+  }, [checkAuthStatus, fetchPosts]);
+
 
   const handlePostSuccess = useCallback(() => {
-    fetchPosts();
+    const token = localStorage.getItem('jwt_token');
+    if (token) {
+      fetchPosts(token);
+    }
+  }, [fetchPosts]);
+
+  const handleNoteDeleted = useCallback(() => {
+    const token = localStorage.getItem('jwt_token');
+    if (token) {
+      fetchPosts(token);
+    }
   }, [fetchPosts]);
 
   return (
     <>
       <EmojiRain />
-      <div
-        className={cn("flex flex-col gap-6 max-w-5xl mx-auto mt-2")}
-      >
-        <h1 className="text-white text-3xl font-bold text-left mb-8">Explore Posts</h1>
-
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="flex-1 flex flex-col">
-            <h2 className="text-white/50 font-bold text-left mb-4">All Posts</h2>
-            <ExploreContent posts={posts} isLoading={loadingPosts} error={postsError} />
-          </div>
-
+      <div className={cn("flex flex-col gap-6 max-w-5xl mx-auto mt-20")}>
+        <div className="flex gap-6">
           <div className="flex-1 flex flex-col">
             {isLoggedIn ? (
               <>
-                <p className="text-white font-bold text-center mb-4">Welcome, {currentUserUsername}! Share your thoughts:</p>
+                <p className="text-white font-bold text-center mb-6">Welcome, {currentUserUsername}! Share your thoughts:</p>
                 <NoteForm
                   initialAuthor={currentUserUsername || ''}
                   isAuthorFieldDisabled={true}
@@ -80,11 +109,20 @@ export default function ExplorePage() {
                 />
               </>
             ) : (
-              <div className="p-4 border border-blue-400 rounded-xl bg-blue-900/20 text-center mb-8">
-                <p className="text-white text-lg mb-2">You are not logged in.</p>
-                <p className="text-blue-200">Log in to write your own posts!</p>
+              <div className="p-4 border border-white/10 rounded-xl text-center mt-13">
+                <p className="text-[#fff] font-bold text-lg mb-2">You are not logged in.</p>
+                <p className="text-white/50">Log in to write your own posts!</p>
               </div>
             )}
+          </div>
+          <div className="flex-2 flex flex-col">
+            <ExploreContent
+              initialPosts={posts}
+              isLoading={loadingPosts}
+              error={postsError}
+              currentUserUsername={currentUserUsername}
+              onNoteDeleted={handleNoteDeleted}
+            />
           </div>
         </div>
       </div>

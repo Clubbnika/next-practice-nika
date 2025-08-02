@@ -8,15 +8,17 @@ export function Header() {
 
   return (
     <header className="ml-7 p-5 font-bold bg-black">
-      <nav>
+      <nav className="flex items-center gap-4"> {/* Додаємо 'flex items-center gap-4' сюди */}
         <Link
           className={
             pathname === PAGES.HOME ? 'text-[#78a068]' : 'text-white/80'
           }
           href={PAGES.HOME}
         >
-          Home |{' '}
+          Home{' '}
         </Link>
+
+        <div className='bg-white/20 h-5 w-[2px]'></div>
 
         <Link
           className={
@@ -24,8 +26,10 @@ export function Header() {
           }
           href={PAGES.POSTS}
         >
-          Posts |{' '}
+          Posts{' '}
         </Link>
+
+        <div className='bg-white/20 h-5 w-[2px]'></div>
 
         <Link
           className={

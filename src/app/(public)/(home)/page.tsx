@@ -43,10 +43,14 @@ export default function Home() {
     }
   }, []);
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const clearMessages = () => {
     setMessage('');
     setError('');
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearMessages();
 
     try {
       const response = await fetch('/api/auth/register', {
@@ -65,8 +69,10 @@ export default function Home() {
         setPassword('');
         setUsername('');
         setIsRegistering(false);
+        setTimeout(clearMessages, 2000);
       } else {
         setError(data.error || 'Unknown registration error.');
+        setTimeout(clearMessages, 2000);
       }
     } catch (err: unknown) {
       console.error('Network or other error:', err);
@@ -75,13 +81,13 @@ export default function Home() {
       } else {
         setError('Connection error. Please try again.');
       }
+      setTimeout(clearMessages, 2000);
     }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
+    clearMessages();
 
     try {
       const response = await fetch('/api/auth/login', {
@@ -103,12 +109,17 @@ export default function Home() {
 
           setIsLoggedIn(true);
           setLoggedInUsername(data.user.username);
-          router.push('/');
+          setTimeout(() => {
+            clearMessages();
+            router.push('/');
+          }, 2000);
         } else {
           setError('Login successful, but user data or token not received.');
+          setTimeout(clearMessages, 2000);
         }
       } else {
         setError(data.error || 'Unknown login error.');
+        setTimeout(clearMessages, 2000);
       }
     } catch (err: unknown) {
       console.error('Network or other error:', err);
@@ -117,6 +128,7 @@ export default function Home() {
       } else {
         setError('Connection error. Please try again.');
       }
+      setTimeout(clearMessages, 2000);
     }
   };
 
@@ -128,10 +140,12 @@ export default function Home() {
     setLoggedInUsername(null);
     setMessage('You have successfully logged out.');
     setError('');
+    setTimeout(clearMessages, 2000);
   };
 
   return (
     <div className={cn("flex flex-col gap-6 max-w-100 mx-auto mt-10")}>
+      <h1 className='text-white text-center font-bold text-2xl'>Log in / Sign in</h1>
       <EmojiRain />
 
       {isLoggedIn ? (
@@ -210,15 +224,12 @@ export default function Home() {
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 mt-8"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5 text-[#2cb52c]" /> : <Eye className="h-5 w-5 text-[#2cb52c]" />} {/* Змінено колір на text-blue-500 */}
+                    {showPassword ? <EyeOff className="h-5 w-5 text-[#2cb52c]" /> : <Eye className="h-5 w-5 text-[#2cb52c]" />}
                   </button>
                 </div>
                 <div className="flex flex-col gap-3">
                   <Button type="submit" className="w-full">
                     {isRegistering ? 'Register' : 'Login'}
-                  </Button>
-                  <Button variant="outline" className="w-full" onClick={() => alert('Google login not implemented yet!')}>
-                    Login with Google
                   </Button>
                 </div>
               </div>
@@ -256,77 +267,3 @@ export default function Home() {
     </div>
   );
 }
-
-
-// 'use client';
-
-// import cn from 'classnames';
-// import { Button } from "@/components/ui/button";
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import { EmojiRain } from '@/components/EmojiRain';
-
-// export default function Home() {
-//   return (
-//     <div className={cn("flex flex-col gap-6 max-w-100 mx-auto mt-10")}>
-//       <h1 className='text-white mx-auto text-3xl font-bold'>Log in</h1>
-//       <EmojiRain />
-//       <Card>
-//         <CardHeader>
-//           <CardTitle>Login to your account</CardTitle>
-//           <CardDescription>
-//             Enter your email below to login to your account
-//           </CardDescription>
-//         </CardHeader>
-//         <CardContent>
-//           <form>
-//             <div className="flex flex-col gap-6">
-//               <div className="grid gap-3">
-//                 <Label htmlFor="email">Email</Label>
-//                 <Input
-//                   id="email"
-//                   type="email"
-//                   placeholder="m@example.com"
-//                   required
-//                 />
-//               </div>
-//               <div className="grid gap-3">
-//                 <div className="flex items-center">
-//                   <Label htmlFor="password">Password</Label>
-//                   <a
-//                     href="#"
-//                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-//                   >
-//                     Forgot your password?
-//                   </a>
-//                 </div>
-//                 <Input id="password" type="password" required />
-//               </div>
-//               <div className="flex flex-col gap-3">
-//                 <Button type="submit" className="w-full">
-//                   Login
-//                 </Button>
-//                 <Button variant="outline" className="w-full">
-//                   Login with Google
-//                 </Button>
-//               </div>
-//             </div>
-//             <div className="mt-4 text-center text-sm">
-//               Don&apos;t have an account?{" "}
-//               <a href="#" className="underline underline-offset-4">
-//                 Sign up
-//               </a>
-//             </div>
-//           </form>
-//         </CardContent>
-//       </Card>
-//     </div>
-//   );
-// }

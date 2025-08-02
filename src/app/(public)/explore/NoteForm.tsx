@@ -22,6 +22,10 @@ export function NoteForm({ onPostSuccess, initialAuthor, isAuthorFieldDisabled =
     }
   }, [initialAuthor]);
 
+  const clearMessages = () => {
+    setMessage(null);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setMessage(null);
@@ -41,6 +45,7 @@ export function NoteForm({ onPostSuccess, initialAuthor, isAuthorFieldDisabled =
       if (newPost) {
         setMessage({ type: 'success', text: 'Post successfully added!' });
         setContent('');
+        setTimeout(clearMessages, 2000);
         if (onPostSuccess) {
           onPostSuccess();
         }

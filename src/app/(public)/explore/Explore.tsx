@@ -51,7 +51,7 @@ export function ExploreContent({ initialPosts, isLoading, error, currentUserUser
         try {
           const errorData = await response.json();
           errorMessage = errorData.error || errorMessage;
-        } catch (e) {
+        } catch (e: unknown) {
           console.error("Error parsing server error response:", e);
         }
         throw new Error(errorMessage);
@@ -79,13 +79,13 @@ export function ExploreContent({ initialPosts, isLoading, error, currentUserUser
     <>
       <div className="flex justify-end space-x-4 mb-4">
         <button
-          className={cn('text-white/80 px-4 py-2 font-bold text-sm rounded content-end', { 'bg-[#78a068] text-black': filter === 'all' })}
+          className={cn('text-white/80 px-4 py-2 font-bold text-sm rounded', { 'bg-[#78a068] text-black': filter === 'all' })}
           onClick={() => setFilter('all')}
         >
           All Posts
         </button>
         <button
-          className={cn('text-white/80 px-4 font-bold text-sm py-2 rounded', { 'bg-[#78a068] text-black': filter === 'yourPosts' })}
+          className={cn('text-white/80 px-4 py-2 font-bold text-sm rounded', { 'bg-[#78a068] text-black': filter === 'yourPosts' })}
           onClick={() => setFilter('yourPosts')}
         >
           Your Posts
@@ -94,7 +94,7 @@ export function ExploreContent({ initialPosts, isLoading, error, currentUserUser
 
       <div
         className={cn("space-y-3 pt-3 rounded-t-xl w-full pb-3 min-h-[520px]", {
-          'flex justify-center': isLoading || error || filteredPosts.length === 0
+          'flex justify-center items-center': isLoading || error || deleteError || filteredPosts.length === 0 // Центрування, якщо є помилка видалення
         })}
         style={{
           backgroundImage: 'url(background.png)',
@@ -110,7 +110,7 @@ export function ExploreContent({ initialPosts, isLoading, error, currentUserUser
         {!isLoading && filteredPosts.length === 0 && !error && !deleteError && (
           <p className="text-white text-center">No posts yet. Be the first to write one!</p>
         )}
-        {filteredPosts.map((note) => (
+        {!error && !deleteError && filteredPosts.map((note) => (
           <Note
             key={note.id}
             note={note}

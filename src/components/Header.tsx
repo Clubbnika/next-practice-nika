@@ -8,7 +8,7 @@ export function Header() {
 
   return (
     <header className="ml-7 p-5 font-bold bg-black">
-      <nav className="flex items-center gap-4"> {/* Додаємо 'flex items-center gap-4' сюди */}
+      <nav className="flex items-center gap-4">
         <Link
           className={
             pathname === PAGES.HOME ? 'text-[#78a068]' : 'text-white/80'

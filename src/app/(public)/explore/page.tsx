@@ -50,23 +50,28 @@ export default function ExplorePage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch posts');
+        if (response.status === 401 && token) {
+          throw new Error('Unauthorized: Invalid or expired session. Please log in again.');
+        }
+        throw new Error('Failed to fetch posts.');
       }
 
       const data: PostType[] = await response.json();
       setPosts(data);
     } catch (err: unknown) {
       console.error('Error fetching posts:', err);
-      const errorMessage = (err instanceof Error) ? err.message : 'Failed to load posts.';
+      const errorMessage = (err instanceof Error) ? err.message : 'Failed to load posts due to an unknown error.';
       setPostsError(errorMessage);
+
       if (token && errorMessage.includes('Unauthorized')) {
         setIsLoggedIn(false);
         setCurrentUserUsername(null);
         localStorage.removeItem('jwt_token');
         localStorage.removeItem('user_username');
-        setPostsError('Session expired. Please log in again.');
+        setPostsError('Your session has expired. Please log in again.');
       } else if (!token) {
-        setPostsError(null);
+
+        setPostsError(errorMessage);
       }
     } finally {
       setLoadingPosts(false);
@@ -77,7 +82,6 @@ export default function ExplorePage() {
     const token = checkAuthStatus();
     fetchPosts(token);
   }, [checkAuthStatus, fetchPosts]);
-
 
   const handlePostSuccess = useCallback(() => {
     const token = localStorage.getItem('jwt_token');

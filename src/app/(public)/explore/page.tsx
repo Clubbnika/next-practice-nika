@@ -70,7 +70,6 @@ export default function ExplorePage() {
         localStorage.removeItem('user_username');
         setPostsError('Your session has expired. Please log in again.');
       } else if (!token) {
-
         setPostsError(errorMessage);
       }
     } finally {
@@ -100,8 +99,11 @@ export default function ExplorePage() {
   return (
     <>
       <EmojiRain />
-      <div className={cn("flex flex-col gap-6 max-w-5xl mx-auto mt-20")}>
-        <div className="flex gap-6">
+      {/* Updated the main container to have some vertical margin and horizontal padding */}
+      <div className={cn("flex flex-col gap-6 max-w-5xl mx-auto my-8 p-4")}>
+        {/* Main content container. Stacks on mobile, side-by-side on medium screens and up. */}
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* NoteForm section */}
           <div className="flex-1 flex flex-col">
             {isLoggedIn ? (
               <>
@@ -119,7 +121,8 @@ export default function ExplorePage() {
               </div>
             )}
           </div>
-          <div className="flex-2 flex flex-col">
+          {/* ExploreContent section */}
+          <div className="flex-1 flex flex-col">
             <ExploreContent
               initialPosts={posts}
               isLoading={loadingPosts}

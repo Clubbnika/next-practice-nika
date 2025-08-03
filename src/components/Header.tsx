@@ -33,11 +33,11 @@ export function Header() {
 
         <Link
           className={
-            pathname === PAGES.PROFILE_FAKE ? 'text-[#78a068]' : 'text-white/80'
+            pathname === PAGES.ACCOUNT ? 'text-[#78a068]' : 'text-white/80'
           }
-          href={PAGES.PROFILE_FAKE}
+          href={PAGES.ACCOUNT}
         >
-          Profile{' '}
+          Account{' '}
         </Link>
       </nav>
       <div className="width-full h-[1px] mt-5 bg-white/10"></div>

@@ -27,6 +27,7 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInUsername, setLoggedInUsername] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // New state for loading
 
   const router = useRouter();
 
@@ -51,6 +52,7 @@ export default function Home() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     clearMessages();
+    setIsSubmitting(true); // Start loading
 
     try {
       const response = await fetch('/api/auth/register', {
@@ -82,12 +84,15 @@ export default function Home() {
         setError('Connection error. Please try again.');
       }
       setTimeout(clearMessages, 2000);
+    } finally {
+      setIsSubmitting(false); // Stop loading
     }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     clearMessages();
+    setIsSubmitting(true); // Start loading
 
     try {
       const response = await fetch('/api/auth/login', {
@@ -129,6 +134,8 @@ export default function Home() {
         setError('Connection error. Please try again.');
       }
       setTimeout(clearMessages, 2000);
+    } finally {
+      setIsSubmitting(false); // Stop loading
     }
   };
 
@@ -228,8 +235,8 @@ export default function Home() {
                   </button>
                 </div>
                 <div className="flex flex-col gap-3">
-                  <Button type="submit" className="w-full">
-                    {isRegistering ? 'Register' : 'Login'}
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? (isRegistering ? 'Registering...' : 'Logging in...') : (isRegistering ? 'Register' : 'Login')}
                   </Button>
                 </div>
               </div>

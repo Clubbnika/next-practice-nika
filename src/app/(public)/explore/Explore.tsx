@@ -18,6 +18,7 @@ export function ExploreContent({ initialPosts, isLoading, error, currentUserUser
   const [deletingNoteId, setDeletingNoteId] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'yourPosts'>('all');
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [authMessage, setAuthMessage] = useState<string | null>(null);
 
   const handleDeletePost = async (id: string) => {
     setDeletingNoteId(id);
@@ -73,28 +74,41 @@ export function ExploreContent({ initialPosts, isLoading, error, currentUserUser
     return allPosts;
   }, []);
 
+  const handleSetFilter = (newFilter: 'all' | 'yourPosts') => {
+    if (newFilter === 'yourPosts' && !currentUserUsername) {
+      setAuthMessage("Log in to write and see your posts!");
+      setFilter('all');
+    } else {
+      setAuthMessage(null);
+      setFilter(newFilter);
+    }
+  };
+
   const filteredPosts = getFilteredPosts(initialPosts, filter, currentUserUsername);
+
+  const showContent = !isLoading && !error && !deleteError && !authMessage;
+  const showCenteredMessage = isLoading || error || deleteError || authMessage || (!isLoading && filteredPosts.length === 0);
 
   return (
     <>
       <div className="flex justify-end space-x-4 mb-4">
         <button
-          className={cn('text-white/80 px-4 py-2 font-bold text-sm rounded', { 'bg-[#78a068] text-black': filter === 'all' })}
-          onClick={() => setFilter('all')}
+          className={cn('text-white/80 px-4 py-2 font-bold text-sm rounded', { 'bg-[#78a068] text-black': filter === 'all' && !authMessage })}
+          onClick={() => handleSetFilter('all')}
         >
           All Posts
         </button>
         <button
-          className={cn('text-white/80 px-4 py-2 font-bold text-sm rounded', { 'bg-[#78a068] text-black': filter === 'yourPosts' })}
-          onClick={() => setFilter('yourPosts')}
+          className={cn('text-white/80 px-4 py-2 font-bold text-sm rounded', { 'bg-[#78a068] text-black': filter === 'yourPosts' && !authMessage })}
+          onClick={() => handleSetFilter('yourPosts')}
         >
           Your Posts
         </button>
       </div>
-
+      
       <div
-        className={cn("space-y-3 pt-3 rounded-t-xl w-full pb-3 min-h-[520px]", {
-          'flex justify-center items-center': isLoading || error || deleteError || filteredPosts.length === 0 // Центрування, якщо є помилка видалення
+        className={cn("space-y-3 pt-3 rounded-t-xl w-full pb-3 min-h-[520px] flex justify-center items-center", {
+          'hidden': !showCenteredMessage
         })}
         style={{
           backgroundImage: 'url(background.png)',
@@ -107,10 +121,27 @@ export function ExploreContent({ initialPosts, isLoading, error, currentUserUser
         {(error || deleteError) && (
           <p className="text-red-500 text-center">Error: {error || deleteError}</p>
         )}
-        {!isLoading && filteredPosts.length === 0 && !error && !deleteError && (
+        {authMessage && (
+          <p className="text-black font-bold text-center">{authMessage}</p>
+        )}
+        {!isLoading && !authMessage && filteredPosts.length === 0 && !error && !deleteError && (
           <p className="text-white text-center">No posts yet. Be the first to write one!</p>
         )}
-        {!error && !deleteError && filteredPosts.map((note) => (
+      </div>
+
+      <div
+        className={cn("space-y-3 pt-3 rounded-t-xl w-full pb-3 min-h-[520px]", {
+          'hidden': showCenteredMessage,
+          'flex flex-col': showContent
+        })}
+        style={{
+          backgroundImage: 'url(background.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: 'full',
+        }}
+      >
+        {showContent && filteredPosts.map((note) => (
           <Note
             key={note.id}
             note={note}

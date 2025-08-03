@@ -99,11 +99,9 @@ export default function ExplorePage() {
   return (
     <>
       <EmojiRain />
-      {/* Updated the main container to have some vertical margin and horizontal padding */}
+          <h1 className='text-center mt-3 text-lg text-[#78a068]'>Explore the posts</h1>
       <div className={cn("flex flex-col gap-6 max-w-5xl mx-auto my-8 p-4")}>
-        {/* Main content container. Stacks on mobile, side-by-side on medium screens and up. */}
         <div className="flex flex-col md:flex-row gap-6">
-          {/* NoteForm section */}
           <div className="flex-1 flex flex-col">
             {isLoggedIn ? (
               <>
@@ -121,7 +119,6 @@ export default function ExplorePage() {
               </div>
             )}
           </div>
-          {/* ExploreContent section */}
           <div className="flex-1 flex flex-col">
             <ExploreContent
               initialPosts={posts}

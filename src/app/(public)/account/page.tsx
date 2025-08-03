@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/app/shared/types/user-avatar';
 import { EmojiRain } from '@/components/EmojiRain';
 
-export default function ProfileFakePage() {
+export default function AccountPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const router = useRouter();
